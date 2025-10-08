@@ -54,10 +54,9 @@ export async function GET() {
     return NextResponse.json(normalized);
   } catch (error) {
     console.error('Error fetching test results:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch test results' },
-      { status: 500 }
-    );
+    
+    // Return empty array instead of error object to prevent frontend crashes
+    return NextResponse.json([]);
   }
 }
 

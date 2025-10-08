@@ -17,10 +17,16 @@ export default function AdminPanel() {
   const fetchTests = async () => {
     try {
       const response = await fetch('/api/tests');
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
       const data = await response.json();
-      setTests(data);
+      // Ensure data is an array before setting it
+      setTests(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error('Error fetching tests:', error);
+      // Set empty array on error to prevent filter issues
+      setTests([]);
     } finally {
       setLoading(false);
     }
