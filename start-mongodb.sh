@@ -11,13 +11,13 @@ if command -v docker &> /dev/null; then
     if docker ps | grep -q "mongo"; then
         echo "✅ MongoDB container is already running!"
     else
-        # Start MongoDB container
+        # Start MongoDB container (using 4.4 for CPU compatibility)
         echo "🔄 Starting MongoDB container..."
         docker run -d \
             --name chromebook-mongo \
             -p 27017:27017 \
             -e MONGO_INITDB_DATABASE=chromebook-tester \
-            mongo:7
+            mongo:4.4
         
         if [ $? -eq 0 ]; then
             echo "✅ MongoDB started successfully!"

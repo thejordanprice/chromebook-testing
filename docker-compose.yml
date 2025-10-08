@@ -17,7 +17,7 @@ services:
     restart: unless-stopped
 
   mongo:
-    image: mongo:7
+    image: mongo:4.4
     container_name: chromebook-mongo
     environment:
       - MONGO_INITDB_DATABASE=chromebook-tester
