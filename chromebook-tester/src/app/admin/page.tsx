@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { TestResult } from '@/types/test';
-import { CheckCircle, XCircle, Calendar, User, Search, Filter } from 'lucide-react';
+import { CheckCircle, XCircle, Calendar, Search } from 'lucide-react';
 
 export default function AdminPanel() {
   const [tests, setTests] = useState<TestResult[]>([]);

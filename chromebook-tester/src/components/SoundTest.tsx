@@ -1,10 +1,15 @@
 'use client';
 
 import { useState, useRef } from 'react';
-import { Volume2, CheckCircle, XCircle, Play, Pause } from 'lucide-react';
+import { CheckCircle, XCircle, Play, Pause } from 'lucide-react';
 
 interface SoundTestProps {
   onComplete: (passed: boolean) => void;
+}
+
+interface WindowWithWebkitAudioContext extends Window {
+  AudioContext: typeof AudioContext;
+  webkitAudioContext?: typeof AudioContext;
 }
 
 export default function SoundTest({ onComplete }: SoundTestProps) {
@@ -15,7 +20,9 @@ export default function SoundTest({ onComplete }: SoundTestProps) {
 
   const playTestSound = () => {
     // Generate a test tone using Web Audio API
-    const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+    const w = window as WindowWithWebkitAudioContext;
+    const AudioCtor = w.AudioContext || w.webkitAudioContext!;
+    const audioContext = new AudioCtor();
     const oscillator = audioContext.createOscillator();
     const gainNode = audioContext.createGain();
     
@@ -77,17 +84,16 @@ export default function SoundTest({ onComplete }: SoundTestProps) {
             <button
               onClick={stopTestSound}
               disabled={!isPlaying}
-              className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Pause className="w-4 h-4 mr-2" />
               Stop Sound
             </button>
           </div>
 
-
           <div className="bg-yellow-50 border border-yellow-200 rounded-md p-3">
             <p className="text-yellow-800 text-sm">
-              <strong>Note:</strong> If you don't hear any sound, check that:
+              <strong>Note:</strong> If you can’t hear any sound, check that:
             </p>
             <ul className="list-disc list-inside mt-2 text-yellow-700 text-sm">
               <li>Volume is turned up</li>

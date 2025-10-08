@@ -7,6 +7,10 @@ interface PowerTestProps {
   onComplete: (passed: boolean) => void;
 }
 
+interface NavigatorWithBattery extends Navigator {
+  getBattery?: () => Promise<{ level: number; charging: boolean }>;
+}
+
 export default function PowerTest({ onComplete }: PowerTestProps) {
   const [powerStatus, setPowerStatus] = useState<'charging' | 'battery' | 'unknown'>('unknown');
   const [batteryLevel, setBatteryLevel] = useState<number | null>(null);
@@ -15,18 +19,16 @@ export default function PowerTest({ onComplete }: PowerTestProps) {
 
   const checkBatteryAPI = async () => {
     try {
-      // Try to get battery information from the Battery API
-      if ('getBattery' in navigator) {
-        const battery = await (navigator as any).getBattery();
+      const nav = navigator as NavigatorWithBattery;
+      if (typeof nav.getBattery === 'function') {
+        const battery = await nav.getBattery();
         setBatteryLevel(Math.round(battery.level * 100));
         setPowerStatus(battery.charging ? 'charging' : 'battery');
       } else {
-        // Fallback if Battery API is not available
         setPowerStatus('unknown');
         setBatteryLevel(null);
       }
-    } catch (error) {
-      console.log('Battery API not available:', error);
+    } catch {
       setPowerStatus('unknown');
       setBatteryLevel(null);
     }

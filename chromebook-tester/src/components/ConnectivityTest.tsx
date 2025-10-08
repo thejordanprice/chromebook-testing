@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Wifi, CheckCircle, XCircle, Loader } from 'lucide-react';
 
 interface ConnectivityTestProps {
@@ -44,7 +44,7 @@ export default function ConnectivityTest({ onComplete }: ConnectivityTestProps) 
       const startTime = Date.now();
       
       try {
-        const response = await fetch(url, {
+        await fetch(url, {
           method: 'GET',
           mode: 'no-cors', // This allows testing without CORS issues
           cache: 'no-cache'
